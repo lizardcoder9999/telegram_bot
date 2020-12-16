@@ -63,6 +63,20 @@ def get_pair_info(message):
         bot.reply_to(message,"Symbol is invalid")
 
 
+@bot.message_handler(func=lambda msg: msg.text is not None and '!stock=' in msg.text)
+def get_stock_info(message):
+    filtered_stock = message.text.replace('!stock=','')
+    url = f"https://api.twelvedata.com/time_series?symbol={filtered_stock}&interval=1min&apikey=52fa79d6593844eb8a0f210fa1e02784"
+    res = requests.get(url)
+    stock_res = json.loads(res.text)
+
+    try: 
+        bot.reply_to(message,f"Stock: {stock_res['meta']['symbol']}\nInterval: {stock_res['meta']['interval']}\nCurrency: {stock_res['meta']['currency']}\nExchange timezone: {stock_res['meta']['exchange_timezone']}\nExchange: {stock_res['meta']['exchange']}\nType: {stock_res['meta']['type']}\n\nValues: {stock_res['values'][0]}\n\nValues: {stock_res['values'][1]}\n\nValues: {stock_res['values'][2]}\n\nValues: {stock_res['values'][3]}\n\nValues: {stock_res['values'][4]}")
+
+    except:
+        bot.reply_to(message,"Stock not found")
+
+
 bot.polling()
 
 
