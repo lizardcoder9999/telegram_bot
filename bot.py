@@ -50,6 +50,67 @@ def get_symbol_info(message):
 
 
 
+@bot.message_handler(func = lambda msg: msg.text is not None and '!pair=' in msg.text)
+def get_pair_info(message):
+    filtered_pair = message.text.replace('!pair=','')
+    url = f"https://api.twelvedata.com/time_series?symbol={filtered_pair}&interval=1min&apikey=52fa79d6593844eb8a0f210fa1e02784"
+    res = requests.get(url)
+    pair_res = json.loads(res.text)
+    
+    bot.reply_to(message,f"Symbol: {pair_res['meta']['symbol']}\nInterval: {pair_res['meta']['interval']}\ncurrency base: {pair_res['meta']['currency_base']}\ncurrency quote: {pair_res['meta']['currency_quote']}\ntype: {pair_res['meta']['type']}\n\nValues: {pair_res['values'][0]}\n\nValues: {pair_res['values'][1]}\n\nValues: {pair_res['values'][2]}\n\nValues: {pair_res['values'][3]}\n\nValues: {pair_res['values'][4]}")
+
+
+
+
+#sample response
+# {
+#    "meta":{
+#       "symbol": "EUR/USD",
+#       "interval": "1min",
+#       "currency_base": "Euro",
+#       "currency_quote": "US Dollar",
+#       "type": "Physical Currency"
+#    },
+#    "values":[
+#       {
+#          "datetime":"2019-08-09 20:59:00",
+#          "open":"1.12000",
+#          "high":"1.12020",
+#          "low":"1.11989",
+#          "close":"1.12020"
+#       },
+#       {
+#          "datetime":"2019-08-09 20:58:00",
+#          "open":"1.12004",
+#          "high":"1.12010",
+#          "low":"1.12004",
+#          "close":"1.12010"
+#       },
+#       {
+#          "datetime":"2019-08-09 20:57:00",
+#          "open":"1.12010",
+#          "high":"1.12020",
+#          "low":"1.12004",
+#          "close":"1.12004"
+#       },
+#       {
+#          "datetime":"2019-08-09 20:56:00",
+#          "open":"1.12024",
+#          "high":"1.12024",
+#          "low":"1.12010",
+#          "close":"1.12010"
+#       },
+#       {
+#          "datetime":"2019-08-09 20:55:00",
+#          "open":"1.12010",
+#          "high":"1.12024",
+#          "low":"1.12004",
+#          "close":"1.12020"
+#       },
+#       {...}
+#    ],
+#    "status":"ok"
+# }
 bot.polling()
 
 
