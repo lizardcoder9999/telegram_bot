@@ -2,6 +2,7 @@ import telebot
 import requests
 from requests import Request, Session
 from requests.exceptions import ConnectionError , Timeout, TooManyRedirects
+from telebot import util
 import json
 
 bot = telebot.TeleBot("1429907822:AAEr4wvDXqPRqhoG3I7JPsGA_TI305_bDsE")
@@ -18,22 +19,6 @@ coinmarket_crypto_endpoint_url = " https://pro-api.coinmarketcap.com/v1/cryptocu
 @bot.message_handler(commands=['start','help'])
 def welcome(message):
     bot.reply_to(message,"Hello")
-
-
-# @bot.message_hander(func= lamda msg: msg.text is not None and '!btcinfo' in msg.txt)
-# def get_crypto_price(message):
-#     parameters = {
-#         "symbol":'BTC'
-#     }
-#     session = Session()
-#     session.headers.update(api_headers)
-#     try:
-#         response = session.get(url,params=parameters)
-#         btc_info_data = json.loads(response.text)
-#         bot.reply_to
-    
-#     except (ConnectionError,Timeout,TooManyRedirects) as e:
-#         print(e)
 
 
 @bot.message_handler(func = lambda msg: msg.text is not None and '!ticker=' in msg.text) 
@@ -65,28 +50,7 @@ def get_symbol_info(message):
 
 
 
-#example response
-# {
-#     "base_currency": "LTC",
-#     "base_currency_scale": 8,
-#     "counter_currency": "BTC",
-#     "counter_currency_scale": 8,
-#     "min_price_increment": 100,
-#     "min_price_increment_scale": 8,
-#     "min_order_size": 8800000,
-#     "min_order_size_scale": 8,
-#     "max_order_size": 0,
-#     "max_order_size_scale": 8,
-#     "lot_size": 1,
-#     "lot_size_scale": 8,
-#     "status": "close",
-#     "id": 23,
-#     "auction_price": 0.0,
-#     "auction_size": 0.0,
-#     "auction_time": "",
-#     "imbalance": 0.0
-# }
-
-
 bot.polling()
+
+
 
