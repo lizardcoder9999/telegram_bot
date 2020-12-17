@@ -18,7 +18,7 @@ coinmarket_crypto_endpoint_url = " https://pro-api.coinmarketcap.com/v1/cryptocu
 
 @bot.message_handler(commands=['start','help'])
 def welcome(message):
-    bot.reply_to(message,"Hello")
+    bot.reply_to(message,"Welcome to the analysis bot\nCommands List\n!ticker=SYMBOL ex: !ticker=BTC-USD\n!symbol=SYMBOL ex: !symbol=BTC-USD\n!pair=PAIR ex: !pair=USD/CAD\n!stock=STOCK ex: !stock=AAPL\n!exchange_rate=PAIR ex: !exchange_rate=USD/CAD\n!convert_currency=PAIR ex: !convert_currency=USD/CAD:100\n!realtime_price=SYMBOL ex: !realtime_price=AAPL\n!quote=REGION:SYMBOL ex: !quote=US:AAPL")
 
 
 @bot.message_handler(func = lambda msg: msg.text is not None and '!ticker=' in msg.text) 
@@ -107,13 +107,13 @@ def get_conversion_data(message):
 
 @bot.message_handler(func=lambda msg: msg.text is not None and '!realtime_price=' in msg.text)
 def get_real_time_price(message):
-    filtered_realtime = message.text.replace('realtime_price=','')
+    filtered_realtime = message.text.replace('!realtime_price=','')
     url = f"https://api.twelvedata.com/price?symbol={filtered_realtime}&apikey=52fa79d6593844eb8a0f210fa1e02784"
     res = requests.get(url)
     realtime_res = json.loads(res.text)
 
     try:
-        bot.reply_to(message,f"Price: {realtime_res['price']}") #FIX KEY ERROR BUG
+        bot.reply_to(message,f"Price: {realtime_res['price']}") 
 
     except:
         bot.reply_to(message,"Symbol not found")
