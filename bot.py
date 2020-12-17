@@ -77,6 +77,63 @@ def get_stock_info(message):
         bot.reply_to(message,"Stock not found")
 
 
+@bot.message_handler(func = lambda msg: msg.text is not None and '!exchange_rate=' in msg.text)
+def get_exchange_rate(message):
+    filtered_exchange = message.text.replace('!exchange_rate=','')
+    url = f"https://api.twelvedata.com/exchange_rate?symbol={filtered_exchange}&apikey=52fa79d6593844eb8a0f210fa1e02784"
+    res = requests.get(url)
+    exchange_res = json.loads(res.text)
+
+    try:
+        bot.reply_to(message,f"Symbol: {exchange_res['symbol']}\nRate: {exchange_res['rate']}\nTimestamp: {exchange_res['timestamp']}")
+
+    except:
+        bot.reply_to(message,'Symbol not found')
+
+
+@bot.message_handler(func=lambda msg: msg.text is not None and '!convert_currency=' in msg.text)
+def get_conversion_data(message):
+    filtered_conversion = message.text.replace('!convert_currency=','')
+    symbol,amount = filtered_conversion.split(':')
+    url = f"https://api.twelvedata.com/currency_conversion?symbol={symbol}&amount={amount}&apikey=52fa79d6593844eb8a0f210fa1e02784"
+    res = requests.get(url)
+    conversion_res = json.loads(res.text)
+
+    try:
+        bot.reply_to(message,f"Symbol: {conversion_res['symbol']}\nRate: {conversion_res['rate']}\nAmount: {conversion_res['amount']}\ntimestamp: {conversion_res['timestamp']}")
+        
+    except:
+        bot.reply_to(message,"Symbol not found")
+
+@bot.message_handler(func=lambda msg: msg.text is not None and '!realtime_price=' in msg.text)
+def get_real_time_price(message):
+    filtered_realtime = message.text.replace('realtime_price=','')
+    url = f"https://api.twelvedata.com/price?symbol={filtered_realtime}&apikey=52fa79d6593844eb8a0f210fa1e02784"
+    res = requests.get(url)
+    realtime_res = json.loads(res.text)
+
+    try:
+        bot.reply_to(message,f"Price: {realtime_res['price']}") #FIX KEY ERROR BUG
+
+    except:
+        bot.reply_to(message,"Symbol not found")
+
+
+@bot.message_handler(func=lambda msg: msg.text is not None and '!quote=' in msg.text)
+def get_quote_data(message):
+    filtered_quote = message.text.replace('!quote=','')
+    url = f"https://api.twelvedata.com/quote?symbol={filtered_quote}&apikey=52fa79d6593844eb8a0f210fa1e02784"
+    res = requests.get(url)
+    quote_res = json.loads(res.text)
+
+    try:
+        bot.reply_to(message,f"Symbol: {quote_res['symbol']}\nName: {quote_res['name']}\nExchange: {quote_res['exchange']}\nCurrency:{quote_res['currency']}\nDate: {quote_res['datetime']}\nOpen: {quote_res['open']}\nHigh: {quote_res['high']}\nLow: {quote_res['low']}\nClose: {quote_res['close']}\nvolume: {quote_res['volume']}\nPrevious Close: {quote_res['previous_close']}\nChange: {quote_res['change']}\nPercent Change: {quote_res['percent_change']}\nAverage volume: {quote_res['average_volume']}\n\n52 Week\nlow: {quote_res['fifty_two_week']['low']}\nhigh: {quote_res['fifty_two_week']['high']}\nlow change: {quote_res['fifty_two_week']['low_change']}\nhigh change: {quote_res['fifty_two_week']['high_change']}\nlow change percent: {quote_res['fifty_two_week']['low_change_percent']}\nhigh change percent: {quote_res['fifty_two_week']['high_change_percent']}\nrange: {quote_res['fifty_two_week']['range']}\n")
+
+    except:
+        bot.reply_to(message,"Symbol not found")
+
+
+
 bot.polling()
 
 
